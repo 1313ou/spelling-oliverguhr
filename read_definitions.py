@@ -18,19 +18,19 @@ def check_oliverguhr(input_text, id):
 
 def count(conn, resume):
     cursor = conn.cursor()
-    sql2 = sqlcount
-    if resume:
-        sql2 += f" WHERE synsetid >= {resume}"
+    sql2 = build_sql(sqlcount, resume)
     cursor.execute(sql2)
     return cursor.fetchone()[0]
+
+
+def build_sql(sql, resume):
+    return sql + f" WHERE synsetid >= {resume}" if resume else sql
 
 
 def read(file, resume, checkf):
     conn = sqlite3.connect(file)
     cursor = conn.cursor()
-    sql2 = sql
-    if resume:
-        sql2 += f" WHERE synsetid >= {resume}"
+    sql2 = build_sql(sql, resume)
     cursor.execute(sql2)
     n = count(conn, resume)
     pb = tqdm(total=n)

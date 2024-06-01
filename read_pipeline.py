@@ -3,23 +3,32 @@
 import argparse
 
 
-def process_line(line):
-    fields = line.split(r"\t")
-    print(f"{fields[0]}")
+def process_text(text, id):
+    print(f"{id}\t{text}")
 
 
-def read_file(file, resume, checkf):
+def read_line(line, checkf):
+    fields = line.split('\t')
+    checkf(fields[1], fields[0])
+
+
+def read_file(file, resume, linef, checkf):
     with open(file) as fp:
         for line in fp:
-            process_line(line.strip())
+            linef(line.strip(), checkf)
+
+
+def get_processing(name):
+    return globals()[name] if name else process_text
 
 
 def main():
     parser = argparse.ArgumentParser(description="scans the samples from sqlite file")
-    parser.add_argument('text', type=str, help='text')
+    parser.add_argument('file', type=str, help='text')
     parser.add_argument('--resume', type=int, help='line to resume from')
+    parser.add_argument('--processing', type=str, help='processing function to apply')
     args = parser.parse_args()
-    read_file(args.text, args.resume, process_line)
+    read_file(args.file, args.resume, read_line, get_processing(args.processing))
 
 
 if __name__ == '__main__':
