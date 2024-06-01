@@ -45,12 +45,18 @@ def read(file, resume, checkf):
     conn.close()
 
 
+def get_processing(name):
+    return globals()[name] if name else check_oliverguhr
+
+
 def main():
     parser = argparse.ArgumentParser(description="scans the samples from sqlite file")
     parser.add_argument('database', type=str, help='database')
     parser.add_argument('--resume', type=int, help='row to resume from')
+    parser.add_argument('--processing', type=str, help='processing function to apply')
     args = parser.parse_args()
-    read(args.database, args.resume, check_oliverguhr)
+    processing = get_processing(args.processing)
+    read(args.database, args.resume, processing)
 
 
 if __name__ == '__main__':
