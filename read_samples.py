@@ -9,8 +9,9 @@ sql = "SELECT sampleid, sample FROM samples"
 
 
 def check_oliverguhr(input_text, id):
-    if not _oliverguhr.spell_check(input_text, id):
-        print(f"{id}\r{input_text}")
+    corrections = _oliverguhr.spell_check(input_text, id)
+    if corrections:
+        print(f"{id}\t{input_text}\t{corrections}")
 
 
 def read(file, resume, checkf):

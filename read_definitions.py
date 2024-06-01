@@ -8,9 +8,10 @@ import _oliverguhr
 sql = "SELECT sampleid, sample FROM samples"
 
 
-def check_sage(input_text, id):
-    if not _oliverguhr.spell_check(input_text, id):
-        print(f"{id}\r{input_text}")
+def check_oliverguhr(input_text, id):
+    corrections = _oliverguhr.spell_check(input_text, id)
+    if corrections:
+        print(f"{id}\t{input_text}\t{corrections}")
 
 
 def read(file, resume, checkf):
@@ -35,7 +36,7 @@ def main():
     parser.add_argument('database', type=str, help='database')
     parser.add_argument('--resume', type=int, help='row to resume from')
     args = parser.parse_args()
-    read(args.database, args.resume, check_sage)
+    read(args.database, args.resume, check_oliverguhr)
 
 
 if __name__ == '__main__':
