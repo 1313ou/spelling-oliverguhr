@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import argparse
-import sys
 import sqlite3
 from tqdm.auto import tqdm
 
