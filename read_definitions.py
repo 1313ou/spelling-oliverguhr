@@ -3,13 +3,13 @@
 import argparse
 import sqlite3
 
-import _sage_ent5
+import _oliverguhr
 
 sql = "SELECT sampleid, sample FROM samples"
 
 
 def check_sage(input_text, id):
-    if not _sage.spell_check(input_text, id):
+    if not _oliverguhr.spell_check(input_text, id):
         print(f"{id}\r{input_text}")
 
 

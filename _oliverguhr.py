@@ -3,7 +3,7 @@ from transformers import pipeline
 # https://huggingface.co/oliverguhr/spelling-correction-english-base
 # pip install tf-keras
 
-fix_spelling = pipeline("text2text-generation", model="oliverguhr/spelling-correction-english-base")
+corrector = pipeline("text2text-generation", model="oliverguhr/spelling-correction-english-base")
 
 
 def normalize(str):
@@ -11,10 +11,10 @@ def normalize(str):
 
 
 def spell_check(input_text, id):
-    output = fix_spelling(input_text, max_length=2048)
+    output = corrector(input_text, max_length=2048)
     corrected_text = output[0]["generated_text"]
     if normalize(corrected_text) != normalize(input_text):
-        #print(f"[{id}] '{input_text}' -> '{corrected_text}'")
+        print(f"{id}\t{input_text}\t{corrected_text}")
         return False
     return True
 

@@ -3,19 +3,13 @@
 import argparse
 import sqlite3
 
-import _sage_ent5
-import _sage_mt5
+import _oliverguhr
 
 sql = "SELECT sampleid, sample FROM samples"
 
 
-def check_sage_ent5(input_text, id):
-    if not _sage_ent5.spell_check(input_text, id):
-        print(f"{id}\r{input_text}")
-
-
-def check_sage_mt5(input_text, id):
-    if not _sage_mt5.spell_check(input_text, id):
+def check_oliverguhr(input_text, id):
+    if not _oliverguhr.spell_check(input_text, id):
         print(f"{id}\r{input_text}")
 
 
@@ -41,7 +35,7 @@ def main():
     parser.add_argument('database', type=str, help='database')
     parser.add_argument('--resume', type=int, help='row to resume from')
     args = parser.parse_args()
-    read(args.database, args.resume, check_sage_mt5)
+    read(args.database, args.resume, check_oliverguhr)
 
 
 if __name__ == '__main__':
