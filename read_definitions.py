@@ -6,19 +6,13 @@ from tqdm.auto import tqdm
 
 import _oliverguhr
 
-sql = "SELECT synsetid, definition FROM synsets"
-sqlcount = "SELECT COUNT(*) FROM synsets"
-
-
-def check_oliverguhr(input_text, id):
-    corrections = _oliverguhr.spell_check(input_text, id)
-    if corrections:
-        print(f"{id}\t{input_text}\t{corrections}")
+sql_definitions = "SELECT synsetid, definition FROM synsets"
+sql_definitions_count = "SELECT COUNT(*) FROM synsets"
 
 
 def count(conn, resume):
     cursor = conn.cursor()
-    sql2 = build_sql(sqlcount, resume)
+    sql2 = build_sql(sql_definitions_count, resume)
     cursor.execute(sql2)
     return cursor.fetchone()[0]
 
@@ -30,7 +24,7 @@ def build_sql(sql, resume):
 def read(file, resume, checkf):
     conn = sqlite3.connect(file)
     cursor = conn.cursor()
-    sql2 = build_sql(sql, resume)
+    sql2 = build_sql(sql_definitions, resume)
     cursor.execute(sql2)
     n = count(conn, resume)
     pb = tqdm(total=n)
@@ -46,7 +40,7 @@ def read(file, resume, checkf):
 
 
 def get_processing(name):
-    return globals()[name] if name else check_oliverguhr
+    return globals()[name] if name else _oliverguhr.spell_check_print
 
 
 def main():
