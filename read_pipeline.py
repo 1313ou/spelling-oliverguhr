@@ -25,10 +25,8 @@ def read_line(line, checkf):
 
 def read_file(file, resume, linef, checkf):
     with open(file) as fp:
-        fp.lines = fp.readlines(10)  # Read first 10 lines
         lines = fp.readlines()
         n = len(lines)
-        # fp.seek(0)
         pb = tqdm(total=n)
         for line in lines:  # in fp
             linef(line.strip(), checkf)
