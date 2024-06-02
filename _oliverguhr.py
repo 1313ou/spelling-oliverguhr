@@ -7,7 +7,7 @@ corrector = pipeline("text2text-generation", model="oliverguhr/spelling-correcti
 
 
 def normalize(str):
-    return str.lower().strip('.!? ')
+    return str.lower().strip('.!?" ')
 
 
 def spell_check(input_text, id):

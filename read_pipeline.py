@@ -1,9 +1,20 @@
 #!/usr/bin/python3
 
 import argparse
+from tqdm.auto import tqdm
+import _oliverguhr
+
+
+def check_sage_ent5(input_text, id):
+    if not _oliverguhr.spell_check(input_text, id):
+        print(f"{id}\r{input_text}")
 
 
 def process_text(text, id):
+    check_sage_ent5(text, id)
+
+
+def print_text(text, id):
     print(f"{id}\t{text}")
 
 
@@ -14,8 +25,14 @@ def read_line(line, checkf):
 
 def read_file(file, resume, linef, checkf):
     with open(file) as fp:
-        for line in fp:
+        fp.lines = fp.readlines(10)  # Read first 10 lines
+        lines = fp.readlines()
+        n = len(lines)
+        # fp.seek(0)
+        pb = tqdm(total=n)
+        for line in lines:  # in fp
             linef(line.strip(), checkf)
+            pb.update(1)
 
 
 def get_processing(name):

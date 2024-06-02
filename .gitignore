@@ -1,5 +1,5 @@
 /spelling
 /.venv
-/oewn-2024-sqlite-2.1.1.sqlite
+/oewn*.sqlite
 /definitions*
 /samples*
