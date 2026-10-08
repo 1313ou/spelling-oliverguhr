@@ -1,9 +1,18 @@
-from transformers import pipeline
+import torch
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-# https://huggingface.co/oliverguhr/spelling-correction-english-base
-# pip install tf-keras
+MODEL = "oliverguhr/spelling-correction-english-base"
 
-corrector = pipeline("text2text-generation", model="oliverguhr/spelling-correction-english-base")
+tokenizer = AutoTokenizer.from_pretrained(MODEL)
+model = AutoModelForSeq2SeqLM.from_pretrained(MODEL)
+model.eval()
+
+
+def correct(texts: list[str], max_new_tokens: int = 128) -> list[str]:
+    inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True)
+    with torch.inference_mode():
+        outputs = model.generate(**inputs, max_new_tokens=max_new_tokens)
+    return tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
 
 def normalize(text):
@@ -15,8 +24,8 @@ def check(sentence, correction):
 
 
 def spell_check(input_text, rowid):
-    output = corrector(input_text, max_length=2048)
-    corrected_text = output[0]["generated_text"]
+    output = correct(input_text)
+    corrected_text = output[0]
     if not check(corrected_text, input_text):
         return corrected_text
     return None
@@ -25,15 +34,6 @@ def spell_check(input_text, rowid):
 def spell_check_print(input_text, rowid):
     corrections = spell_check(input_text, rowid)
     if corrections:
-        print(f"{rowid}\t{input_text}\t{corrections}")
-
-
-if __name__ == '__main__':
-    spell_check_print("lets do a comparsion", 0)
-    spell_check_print("I love to code in Pyhton.", 0)
-    spell_check_print("Ths sentence has some misspeld words.", 0)
-    spell_check_print("Screw you kuys, I am going home.", 1)
-    spell_check_print("on one side of the island was a hugh rock, almost detached", 11595)
-    spell_check_print("The glass was opacified more greater privacy", 11682)
-    spell_check_print("in collee she minored in mathematics", 12111)
-    spell_check_print("The scientists had to accommodate the new results with the existing theories", 10184)
+        print(f"{rowid}\t{input_text} -> {corrections}")
+    else:
+        print(f"{rowid}\t{input_text} -> <no correction>")
